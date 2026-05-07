@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  spark-jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spark-learning-sami
+    image: spark-learning:latest
+    ports:
+      - "8888:8888"  # Jupyter Lab
+      - "4040:4040"  # Spark UI (local mode)
+      - "8080:8080"  # Spark master UI (if needed)
+    volumes:
+      - ./notebooks:/workspace/notebooks
+      - ./datasets:/workspace/datasets
+      - ./output:/workspace/output
+      - ./projects:/workspace/projects
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - SPARK_LOCAL_IP=127.0.0.1
+      - PYTHONUNBUFFERED=1
+    working_dir: /workspace
+    stdin_open: true
+    tty: true
+    networks:
+      - spark-network
+
+ 
+
+networks:
+  spark-network:
+    driver: bridge
